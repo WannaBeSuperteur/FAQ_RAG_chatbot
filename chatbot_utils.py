@@ -76,10 +76,9 @@ def build_prompt_with_rag_result(user_query:str, rag_retrieved_faqs:List[Dict[st
     rag_retrieved_faq_lines = []
     for i, c in enumerate(rag_retrieved_faqs, 1):
         rag_retrieved_faq_lines.append(
-            f"[FAQ {i}]\n"
-            f"- Q: {c['matched_question']}\n"
-            f"- A: {c['answer']}\n"
-            f"- distance: {c['distance']:.4f}\n"
+            f"[질문/답변 {i}]\n"
+            f"- 질문: {c['matched_question']}\n"
+            f"- 답변: {c['answer']}\n"
         )
     no_faq_message = "(FAQ 추출 결과가 없습니다. 사용자의 질문이 스마트스토어와 관련성이 낮다고 판단한다고 답변해야 합니다.)"
     faq_context = "\n".join(rag_retrieved_faq_lines) if rag_retrieved_faq_lines else no_faq_message
