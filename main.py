@@ -11,6 +11,14 @@ from rag import retrieve_top_k
 from openai_api import openai_stream_answer
 
 
+# remove warning messages
+import warnings
+warnings.filterwarnings("ignore")
+
+import logging
+logging.getLogger("chromadb.telemetry").setLevel(logging.CRITICAL)
+
+
 FAQ_PKL_PATH = 'final_result.pkl'
 DISTANCE_THRESHOLD = 0.3
 OPENAI_MODEL = 'gpt-4o-mini'
