@@ -82,6 +82,7 @@ def build_prompt_with_rag_result(user_query:str, rag_retrieved_faqs:List[Dict[st
         )
     no_faq_message = "(FAQ 추출 결과가 없습니다. 사용자의 질문이 스마트스토어와 관련성이 낮다고 판단한다고 답변해야 합니다.)"
     faq_context = "\n".join(rag_retrieved_faq_lines) if rag_retrieved_faq_lines else no_faq_message
+    add_log(tag='info', case_id=33, content=f'retrieved FAQ count: {len(rag_retrieved_faq_lines)}')
     add_log(tag='info', case_id=30, content=f'faq_context: {faq_context}')
 
     prompt_with_rag_result = (
