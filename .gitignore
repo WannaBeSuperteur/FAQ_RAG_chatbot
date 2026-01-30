@@ -1,3 +1,4 @@
 chatgpt_key.txt
 final_result.pkl
 .idea/*
+__pycache__/*
