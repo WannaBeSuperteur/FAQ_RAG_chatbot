@@ -21,7 +21,7 @@ def set_openai_key():
     with open('chatgpt_key.txt', 'r') as f:
         openai_key = f.readlines()[0]
         os.environ['OPENAI_API_KEY'] = openai_key
-    add_log(tag='info', case_id=1, content=f'OpenAI Key set: {openai_key}')
+    add_log(tag='info', case_id=1, content=f'OpenAI Key set: {openai_key[:16]}****')
 
 
 def main():
