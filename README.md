@@ -146,3 +146,15 @@ std   : 12.966356507399645
 
 ## 6. 재현 가능성 (실행 가이드)
 
+* Python 및 시스템 환경
+  * **Python 3.10.11**
+  * OS: **Windows 10**
+  * **CUDA GPU** (예: NVIDIA GPU) 사용 가능한 상태여야 함
+* 실행 과정 (PyCharm 또는 Windows Powershell)
+
+```
+pip install -r requirements.py
+python main.py
+```
+
+* ```python main.py``` 가 실행이 안 될 경우 ```python3 main.py``` 로 실행
