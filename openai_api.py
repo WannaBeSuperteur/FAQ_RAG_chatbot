@@ -25,9 +25,6 @@ def openai_stream_answer(
             - (str) : streamed response message
     """
 
-    for message in messages:
-        print(message)
-
     stream = client.responses.create(
         model=model_name,
         input=messages,
