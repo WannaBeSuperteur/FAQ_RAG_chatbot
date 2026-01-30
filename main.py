@@ -5,7 +5,7 @@ from openai import OpenAI
 from utils import load_faq_as_dataframe
 from embedding import HFMeanPoolingEmbedder, EMBEDDING_MODEL_NAME
 from chroma_db import build_or_load_chroma
-from chatbot_utils import build_system_prompt, append_history, load_recent_history, build_prompt_with_rag_result
+from chatbot_utils import build_system_prompt, append_to_history, load_recent_history, build_prompt_with_rag_result
 from rag import retrieve_top_k
 from openai_api import openai_stream_answer
 
