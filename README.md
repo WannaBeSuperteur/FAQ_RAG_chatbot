@@ -142,6 +142,14 @@ std   : 12.966356507399645
 
 ### 5-2. 평가 코드
 
+* [평가용 Python 코드](evaluation.py)
+* 실행 과정 (PyCharm 또는 Windows Powershell)
+
+```
+pip install -r requirements.py
+python evaluation.py
+```
+
 ### 5-3. 평가 결과
 
 ## 6. 재현 가능성 (실행 가이드)

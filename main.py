@@ -3,7 +3,7 @@ import os
 from openai import OpenAI
 
 from logging_utils import add_log
-from utils import load_faq_as_dataframe
+from utils import load_faq_as_dataframe, set_openai_key
 from embedding import HFMeanPoolingEmbedder, EMBEDDING_MODEL_NAME
 from chroma_db import build_or_load_chroma
 from chatbot_utils import build_instructions, append_to_history, load_recent_history, build_prompt_with_rag_result
@@ -23,13 +23,6 @@ FAQ_PKL_PATH = 'final_result.pkl'
 DISTANCE_THRESHOLD = 0.3
 OPENAI_MODEL = 'gpt-4o-mini'
 TOP_K = 2
-
-
-def set_openai_key():
-    with open('chatgpt_key.txt', 'r') as f:
-        openai_key = f.readlines()[0]
-        os.environ['OPENAI_API_KEY'] = openai_key
-    add_log(tag='info', case_id=1, content=f'OpenAI Key set: {openai_key[:16]}****')
 
 
 def main():
