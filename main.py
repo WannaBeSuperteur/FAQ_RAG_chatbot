@@ -79,16 +79,16 @@ def main():
         final_content = prompt_with_rag_result + '\n' + instructions
 
         # recent_history include last user question (prompt) -> add RAG-result for last user question
-        trimmed = []
+        trimmed_message = []
         for m in recent_history[:-1]:
-            trimmed.append(m)
-        trimmed.append({"role": "user", "content": final_content})
+            trimmed_message.append(m)
+        trimmed_message.append({"role": "user", "content": final_content})
 
         print("chatbot > ")
         assistant_text = openai_stream_answer(
             client=client,
             model_name=OPENAI_MODEL,
-            messages=trimmed
+            messages=trimmed_message
         )
         add_log(tag='info', case_id=32, content=f'chatbot response: {assistant_text}')
 
