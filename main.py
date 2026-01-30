@@ -6,7 +6,7 @@ from logging_utils import add_log
 from utils import load_faq_as_dataframe
 from embedding import HFMeanPoolingEmbedder, EMBEDDING_MODEL_NAME
 from chroma_db import build_or_load_chroma
-from chatbot_utils import build_system_prompt, append_to_history, load_recent_history, build_prompt_with_rag_result
+from chatbot_utils import build_instructions, append_to_history, load_recent_history, build_prompt_with_rag_result
 from rag import retrieve_top_k
 from openai_api import openai_stream_answer
 
@@ -22,7 +22,7 @@ logging.getLogger("chromadb.telemetry").setLevel(logging.CRITICAL)
 FAQ_PKL_PATH = 'final_result.pkl'
 DISTANCE_THRESHOLD = 0.3
 OPENAI_MODEL = 'gpt-4o-mini'
-TOP_K = 5
+TOP_K = 2
 
 
 def set_openai_key():
@@ -46,8 +46,8 @@ def main():
     # OpenAI Client and system prompt
     client = OpenAI()
     add_log(tag='info', case_id=12, content='OpenAI client generated successful!')
-    system_prompt = build_system_prompt()
-    add_log(tag='info', case_id=13, content='System prompt build successful!')
+    instructions = build_instructions()
+    add_log(tag='info', case_id=13, content='Instructions build successful!')
 
     while True:
         user_query = input("input user question > ").strip()
@@ -76,18 +76,18 @@ def main():
         # OpenAI final input prompt = (user question + RAG-retrieved FAQs)
         recent_history = load_recent_history(max_messages=10)
         prompt_with_rag_result = build_prompt_with_rag_result(user_query, rag_retrieved_faqs)
+        final_content = prompt_with_rag_result + '\n' + instructions
 
         # recent_history include last user question (prompt) -> add RAG-result for last user question
         trimmed = []
         for m in recent_history[:-1]:
             trimmed.append(m)
-        trimmed.append({"role": "user", "content": prompt_with_rag_result})
+        trimmed.append({"role": "user", "content": final_content})
 
         print("chatbot > ")
         assistant_text = openai_stream_answer(
             client=client,
             model_name=OPENAI_MODEL,
-            system_prompt=system_prompt,
             messages=trimmed
         )
         add_log(tag='info', case_id=32, content=f'chatbot response: {assistant_text}')
