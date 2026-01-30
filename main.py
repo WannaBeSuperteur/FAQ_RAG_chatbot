@@ -43,7 +43,7 @@ def main():
             continue
 
         # save history
-        append_history("user", user_query)
+        append_to_history("user", user_query)
 
         # run RAG for only 'question' part
         rag_retrieved_faqs, shortest_distance = retrieve_top_k(collection, user_query, TOP_K)
@@ -77,7 +77,7 @@ def main():
         )
 
         # save history
-        append_history("assistant", assistant_text)
+        append_to_history("assistant", assistant_text)
 
 
 if __name__ == "__main__":

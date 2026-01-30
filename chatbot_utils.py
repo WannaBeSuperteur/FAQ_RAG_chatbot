@@ -17,7 +17,7 @@ def build_system_prompt() -> str:
     )
 
 
-def append_history(role:str, content:str, chat_history_path:str=CHAT_HISTORY_PATH) -> None:
+def append_to_history(role:str, content:str, chat_history_path:str=CHAT_HISTORY_PATH) -> None:
     item = {
         "ts": datetime.datetime.now().isoformat(timespec="seconds"),
         "role": role,
