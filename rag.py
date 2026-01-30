@@ -1,14 +1,10 @@
 
 
+from utils import extract_last_question_text
 from typing import Tuple, List, Dict, Any, Collection
 
 
 TOP_K = 5
-
-
-# for example, FAQ question is "[A] [B] C" -> return only "C" part
-def extract_last_question_text(s:str) -> str:
-    return s.split(']')[-1]
 
 
 # retrieve FAQ documents using RAQ

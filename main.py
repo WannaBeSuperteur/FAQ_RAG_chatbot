@@ -27,11 +27,11 @@ def main():
     set_openai_key()
 
     # load FAQ as Pandas DataFrame
-    df = load_faq_as_dataframe(FAQ_PKL_PATH)
+    faq_df = load_faq_as_dataframe(FAQ_PKL_PATH)
 
     # load Chroma DB (with Q&A Embedded)
     embedder = HFMeanPoolingEmbedder(model_name=EMBEDDING_MODEL_NAME)
-    collection = build_or_load_chroma(df, embedder)
+    collection = build_or_load_chroma(faq_df, embedder)
 
     # OpenAI Client and system prompt
     client = OpenAI()
@@ -68,7 +68,7 @@ def main():
             trimmed.append(m)
         trimmed.append({"role": "user", "content": prompt_with_rag_result})
 
-        print("chatbot > ", end="")
+        print("chatbot > ")
         assistant_text = openai_stream_answer(
             client=client,
             model_name=OPENAI_MODEL,
