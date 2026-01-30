@@ -1,5 +1,6 @@
 chatgpt_key.txt
 chat_history.txt
+logging.txt
 final_result.pkl
 .idea/*
 __pycache__/*

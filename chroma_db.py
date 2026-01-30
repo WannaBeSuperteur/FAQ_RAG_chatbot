@@ -5,6 +5,7 @@ import chromadb
 from chromadb.api.models.Collection import Collection
 from tqdm import tqdm
 
+from logging_utils import add_log
 
 CHROMA_DIR = "chroma_db"                     # Chroma DB save path
 CHROMA_COLLECTION = "smartstore_faq_q_only"  # Chroma DB collection name
@@ -31,7 +32,10 @@ def build_or_load_chroma(faq_df:pd.DataFrame, embedder:HFMeanPoolingEmbedder) ->
 
     # if collection get successful -> then return this collection
     if collection.count() > 0:
+        add_log(tag='info', case_id=8, content='Chroma DB collection load successful')
         return collection
+
+    add_log(tag='info', case_id=9, content='Chroma DB collection load failed, creating one ...')
 
     ids = [str(i) for i in range(len(faq_df))]
     documents = faq_df["q_for_rag"].tolist()
@@ -40,13 +44,13 @@ def build_or_load_chroma(faq_df:pd.DataFrame, embedder:HFMeanPoolingEmbedder) ->
         for i in range(len(faq_df))
     ]
 
-    print(f"[Index] ChromaDB index construction start : N={len(faq_df)}")
+    add_log(tag='info', case_id=10, content=f'Chroma DB index construction start. count: {len(faq_df)}')
     for i in tqdm(range(0, len(faq_df), CHROMA_DB_BATCH_SIZE)):
         collection.add(
             ids=ids[i:i + CHROMA_DB_BATCH_SIZE],
             documents=documents[i:i + CHROMA_DB_BATCH_SIZE],
             metadatas=metadatas[i:i + CHROMA_DB_BATCH_SIZE],
         )
-    print("[Index] ChromaDB index construction finished!!")
+    add_log(tag='info', case_id=11, content='ChromaDB index construction successful!')
 
     return collection

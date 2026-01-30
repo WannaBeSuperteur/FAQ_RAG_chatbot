@@ -1,5 +1,4 @@
-
-
+from logging_utils import add_log
 from utils import extract_last_question_text
 from typing import Tuple, List, Dict, Any
 from chromadb.api.models.Collection import Collection
@@ -32,13 +31,15 @@ def retrieve_top_k(collection: Collection, user_query:str, k:int=TOP_K) -> Tuple
 
     rag_retrieved_faqs: List[Dict[str, Any]] = []
     for meta, distance in zip(metas, distances):
-        rag_retrieved_faqs.append(
-            {
-                "matched_question": (meta or {}).get("question", ""),
-                "answer": (meta or {}).get("answer", ""),
-                "distance": float(distance),
-            }
-        )
+        faq_item = {
+            "distance": float(distance),
+            "matched_question": (meta or {}).get("question", ""),
+            "answer": (meta or {}).get("answer", ""),
+        }
+        rag_retrieved_faqs.append(faq_item)
+        add_log(tag='info', case_id=29, content=f'FAQ item: {faq_item}')
 
     shortest_distance = float(distances[0]) if distances else 1.0
+
+    add_log(tag='info', case_id=18, content=f'TOP-K retrieved. shortest_distance: {shortest_distance}')
     return rag_retrieved_faqs, shortest_distance

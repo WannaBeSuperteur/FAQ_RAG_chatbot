@@ -3,6 +3,7 @@ import datetime
 import json
 from typing import List, Dict, Any
 
+from logging_utils import add_log
 
 CHAT_HISTORY_PATH = "chat_history.txt"
 
@@ -23,8 +24,13 @@ def append_to_history(role:str, content:str, chat_history_path:str=CHAT_HISTORY_
         "role": role,
         "content": content,
     }
-    with open(chat_history_path, "a", encoding="utf-8") as f:
-        f.write(json.dumps(item, ensure_ascii=False) + "\n")
+
+    try:
+        with open(chat_history_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+        add_log(tag='info', case_id=16, content='append to chat history successful!')
+    except Exception as e:
+        add_log(tag='error', case_id=17, content=f'append to chat history failed. error: {e}')
 
 
 def load_recent_history(max_messages:int, chat_history_path:str=CHAT_HISTORY_PATH) -> List[Dict[str, str]]:
@@ -50,8 +56,9 @@ def load_recent_history(max_messages:int, chat_history_path:str=CHAT_HISTORY_PAT
             line_as_json = json.loads(line)
             if line_as_json.get("role") in ("user", "assistant"):
                 loaded_messages.append({"role": line_as_json["role"], "content": line_as_json.get("content", "")})
-        except Exception:
-            pass
+            add_log(tag='info', case_id=20, content='chat history load successful!')
+        except Exception as e:
+            add_log(tag='error', case_id=21, content=f'chat history load failed. error: {e}')
 
     return loaded_messages
 
@@ -76,10 +83,14 @@ def build_prompt_with_rag_result(user_query:str, rag_retrieved_faqs:List[Dict[st
         )
     no_faq_message = "(FAQ 추출 결과가 없습니다. 사용자의 질문이 스마트스토어와 관련성이 낮다고 판단한다고 답변해야 합니다.)"
     faq_context = "\n".join(rag_retrieved_faq_lines) if rag_retrieved_faq_lines else no_faq_message
+    add_log(tag='info', case_id=30, content=f'faq_context: {faq_context}')
 
-    return (
+    prompt_with_rag_result = (
         "아래는 사용자의 질문에 따라 검색된 FAQ 컨텍스트입니다.\n"
         "이 컨텍스트를 근거로 사용자의 질문에 답변합니다.\n\n"
         f"=== FAQ 컨텍스트 ===\n{faq_context}\n\n"
         f"=== 사용자 질문 ===\n{user_query}\n"
     )
+
+    add_log(tag='info', case_id=31, content=f'prompt_with_rag_result: {prompt_with_rag_result}')
+    return prompt_with_rag_result

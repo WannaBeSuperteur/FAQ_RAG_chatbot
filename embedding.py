@@ -4,6 +4,7 @@ from typing import List
 from transformers import AutoTokenizer, AutoModel
 import numpy as np
 
+from logging_utils import add_log
 
 EMBEDDING_MODEL_NAME = "telepix/PIXIE-Rune-Preview"
 
@@ -11,11 +12,16 @@ EMBEDDING_MODEL_NAME = "telepix/PIXIE-Rune-Preview"
 class HFMeanPoolingEmbedder:
     def __init__(self, model_name:str=EMBEDDING_MODEL_NAME):
         self.model_name = model_name
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModel.from_pretrained(model_name).to(self.device)
-        self.model.eval()
+        try:
+            self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+            self.model = AutoModel.from_pretrained(model_name).to(self.device)
+            self.model.eval()
+            add_log(tag='info', case_id=5, content=f'Embedding model initialized. model_name: {model_name}, device: {self.device}')
+        except Exception as e:
+            add_log(tag='error', case_id=6, content=f'Embedding model initialize failed. error: {e}')
 
     @torch.no_grad()
     def encode(self, texts:List[str], batch_size:int=32) -> List[List[float]]:
@@ -55,6 +61,8 @@ class HFMeanPoolingEmbedder:
             all_vecs.append(mean_pooled.cpu().numpy())
 
         vecs = np.vstack(all_vecs).astype(np.float32)
+
+        add_log(tag='info', case_id=7, content='Embedding successful')
         return vecs.tolist()
 
     def __call__(self, input:List[str]) -> List[List[float]]:

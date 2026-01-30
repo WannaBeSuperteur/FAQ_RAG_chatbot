@@ -2,6 +2,7 @@
 import os
 from openai import OpenAI
 
+from logging_utils import add_log
 from utils import load_faq_as_dataframe
 from embedding import HFMeanPoolingEmbedder, EMBEDDING_MODEL_NAME
 from chroma_db import build_or_load_chroma
@@ -20,10 +21,11 @@ def set_openai_key():
     with open('chatgpt_key.txt', 'r') as f:
         openai_key = f.readlines()[0]
         os.environ['OPENAI_API_KEY'] = openai_key
-        print(f'openai_key : {openai_key}')
+    add_log(tag='info', case_id=1, content=f'OpenAI Key set: {openai_key}')
 
 
 def main():
+    add_log(tag='info', case_id=0, content='start')
     set_openai_key()
 
     # load FAQ as Pandas DataFrame
@@ -35,11 +37,15 @@ def main():
 
     # OpenAI Client and system prompt
     client = OpenAI()
+    add_log(tag='info', case_id=12, content='OpenAI client generated successful!')
     system_prompt = build_system_prompt()
+    add_log(tag='info', case_id=13, content='System prompt build successful!')
 
     while True:
         user_query = input("input user question > ").strip()
+        add_log(tag='info', case_id=14, content=f'user query: {user_query}')
         if not user_query:
+            add_log(tag='warning', case_id=15, content='user query is empty')
             continue
 
         # save history
@@ -56,6 +62,7 @@ def main():
                 "추가로 궁금한 점이 있으신가요?"
             )
             print(f"chatbot > {refusal}\n")
+            add_log(tag='info', case_id=19, content=f'chatbot response (refusal): {refusal}, shortest_distance: {shortest_distance}')
             continue
 
         # OpenAI final input prompt = (user question + RAG-retrieved FAQs)
@@ -75,6 +82,7 @@ def main():
             system_prompt=system_prompt,
             messages=trimmed
         )
+        add_log(tag='info', case_id=32, content=f'chatbot response: {assistant_text}')
 
         # save history
         append_to_history("assistant", assistant_text)
