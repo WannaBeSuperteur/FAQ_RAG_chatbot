@@ -1,6 +1,7 @@
 
 import torch
 from typing import List
+from transformers import AutoTokenizer, AutoModel
 
 
 EMBEDDING_MODEL_NAME = "telepix/PIXIE-Rune-Preview"
@@ -11,8 +12,9 @@ class HFMeanPoolingEmbedder:
         self.model_name = model_name
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        # 로딩
-        raise NotImplementedError
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModel.from_pretrained(model_name).to(self.device)
+        self.model.eval()
 
     @torch.no_grad()
     def encode(self, texts:List[str], batch_size:int=32) -> List[List[float]]:
