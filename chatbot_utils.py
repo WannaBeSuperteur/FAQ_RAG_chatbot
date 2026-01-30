@@ -37,7 +37,23 @@ def load_recent_history(max_messages:int, chat_history_path:str=CHAT_HISTORY_PAT
             - (list(dict)) : loaded messages
     """
 
-    raise NotImplementedError
+    # get last N (= the value of max_messages) lines
+    with open(chat_history_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    lines = list(filter(lambda x: len(x) >= 1, lines))
+    lines = lines[-max_messages:]
+
+    # return loaded messages
+    loaded_messages: List[Dict[str, str]] = []
+    for line in lines:
+        try:
+            line_as_json = json.loads(line)
+            if line_as_json.get("role") in ("user", "assistant"):
+                loaded_messages.append({"role": line_as_json["role"], "content": line_as_json.get("content", "")})
+        except Exception:
+            pass
+
+    return loaded_messages
 
 
 def build_prompt_with_rag_result(user_query:str, rag_retrieved_faqs:List[Dict[str, Any]]) -> str:
