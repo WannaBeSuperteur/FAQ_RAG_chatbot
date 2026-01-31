@@ -80,7 +80,7 @@ def run_evaluation(question_list:List[str]):
             )
             openai_api_time = time.time() - openai_api_start_at
         else:
-            assistant_text = ''
+            assistant_text = '[REFUSAL]'
             openai_api_time = None
 
         # append to evaluation result
