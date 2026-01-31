@@ -96,8 +96,9 @@ def run_evaluation(question_list:List[str]):
 
 
 if __name__ == "__main__":
-    with open(QUESTION_LIST_PATH, 'r') as f:
+    with open(QUESTION_LIST_PATH, 'r', encoding="utf-8") as f:
         question_list = f.readlines()
+        question_list = [question.replace('\n', '') for question in question_list]
         question_list = list(filter(lambda x: len(x) >= 1, question_list))
         f.close()
 
