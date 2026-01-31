@@ -31,6 +31,18 @@ FAQ RAG (Retrieval Augmented Generation) Chatbot Project
 
 ## 2. 질의응답 시나리오 (데모)
 
+**[ 데모 이미지 1 ]**
+
+![image](images/demo_1.PNG)
+
+**[ 데모 이미지 2 ]**
+
+![image](images/demo_2.PNG)
+
+**[ 데모 이미지 3 ]**
+
+![image](images/demo_3.PNG)
+
 ## 3. 문제 해결 접근 방법
 
 * 주어진 ```final_result.pkl``` 파일에 대한 EDA 결과 (참고: [```eda.py```](eda.py))
