@@ -142,7 +142,35 @@ std   : 12.966356507399645
 
 ## 4. 구현 방법
 
+* 디렉토리 및 파일 구조
 
+![image](images/directory_structure.PNG)
+
+* 코드 파일 설명
+
+| 코드 파일                                | 설명                                    |
+|--------------------------------------|---------------------------------------|
+| [chatbot_utils.py](chatbot_utils.py) | 챗봇 관련 util 함수들                        |
+| [chroma_db.py](chroma_db.py)         | Chroma DB 관련 함수들                      |
+| [eda.py](eda.py)                     | 원본 스마트스토어 Q&A 데이터 (pickle) 의 질문 길이 분석 |
+| [embedding.py](embedding.py)         | Embedding (for RAG) 함수들               |
+| **[evaluation.py](evaluation.py)**   | **성능 평가 코드**                          |
+| [logging_utils.py](logging_utils.py) | 실행 과정 및 결과 로깅 관련 util 함수들             |
+| **[main.py](main.py)**               | **실행 코드**                             |
+| [openai_api.py](openai_api.py)       | OpenAI API 호출 관련 함수들                  |
+| [rag.py](rag.py)                     | RAG 구현 관련 함수들                         |
+| [utils.py](utils.py)                 | 기타 util 함수들                           |
+
+* 텍스트 파일 설명 **(일부는 실행 중 생성)**
+
+| 텍스트 파일                                   | 설명                                |
+|------------------------------------------|-----------------------------------|
+| chat_history.txt                         | 채팅 로그                             |
+| chatgpt_key.txt                          | 해당 파일 추가 후, OpenAI API Key를 넣으면 됨 |
+| evaluation_question_list.txt             | 평가 대상 질문 리스트 (스마트스토어 **관련**)      |
+| evaluation_question_list_not_related.txt | 평가 대상 질문 리스트 (스마트스토어 **무관**)      |
+| logging.txt                              | 로깅 기록된 내용                         |
+| requirements.txt                         | 설치가 필요한 Python 라이브러리 목록           |
 
 ## 5. 성능 평가 (시스템 평가 및 검증)
 
@@ -251,6 +279,7 @@ python evaluation.py
   * OS: **Windows 10**
   * **CUDA GPU** (예: NVIDIA GPU) 사용 가능한 상태여야 함
 * 실행 과정 (PyCharm 또는 Windows Powershell)
+  * 먼저 ```chatgpt_key.txt``` 파일을 **프로젝트 메인 디렉토리 (FAQ_RAG_chatbot) 에** 생성한 후, 해당 파일에 OpenAI API Key (```sk-proj-...```) 를 입력합니다. 
 
 ```
 pip install -r requirements.py
