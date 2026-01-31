@@ -46,6 +46,7 @@ def run_evaluation(question_list:List[str]):
         'retrieve_top_k_time': [],
         'openai_api_time': [],
         'test_query': [],
+        'shortest_distance': [],  # shortest distance of RAG retrieval
         'assistant_answer': []
     }
 
@@ -88,6 +89,7 @@ def run_evaluation(question_list:List[str]):
         evaluation_result['retrieve_top_k_time'].append(retrieve_top_k_time)
         evaluation_result['openai_api_time'].append(openai_api_time)
         evaluation_result['test_query'].append(test_query)
+        evaluation_result['shortest_distance'].append(shortest_distance)  # shortest distance of RAG retrieval
         evaluation_result['assistant_answer'].append(assistant_text)
 
         # save as Pandas DataFrame
