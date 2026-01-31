@@ -142,6 +142,10 @@ std   : 12.966356507399645
 
 ## 4. 구현 방법
 
+* 전체 구조
+
+![image](images/structure.PNG)
+
 * 디렉토리 및 파일 구조
 
 ![image](images/directory_structure.PNG)
