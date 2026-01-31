@@ -43,6 +43,8 @@ def run_evaluation(question_list:List[str]):
 
     evaluation_result = {
         'elapsed_time': [],
+        'retrieve_top_k_time': [],
+        'openai_api_time': [],
         'test_query': [],
         'assistant_answer': []
     }
@@ -53,28 +55,38 @@ def run_evaluation(question_list:List[str]):
         # run RAG for only 'question' part
         print(f'test > {test_query}')
         rag_retrieved_faqs, shortest_distance = retrieve_top_k(collection, test_query, TOP_K)
+        retrieve_top_k_time = time.time() - start_at
 
         # handle user questions not related to 'Naver SmartStore'
+        openai_api_answer = True
         if shortest_distance > DISTANCE_THRESHOLD:
             print('chatbot > [REFUSAL]')
-            continue
+            openai_api_answer = False
 
-        # OpenAI final input prompt = (user question + RAG-retrieved FAQs)
-        # without chat history for test
-        prompt_with_rag_result = build_prompt_with_rag_result(test_query, rag_retrieved_faqs)
-        final_content = prompt_with_rag_result + '\n' + instructions
-        trimmed_message = [{"role": "user", "content": final_content}]
+        if openai_api_answer:
+            # OpenAI final input prompt = (user question + RAG-retrieved FAQs)
+            # without chat history for test
+            prompt_with_rag_result = build_prompt_with_rag_result(test_query, rag_retrieved_faqs)
+            final_content = prompt_with_rag_result + '\n' + instructions
+            trimmed_message = [{"role": "user", "content": final_content}]
 
-        print("chatbot > ")
-        assistant_text = openai_stream_answer(
-            client=client,
-            model_name=OPENAI_MODEL,
-            messages=trimmed_message
-        )
+            print("chatbot > ")
+            openai_api_start_at = time.time()
+            assistant_text = openai_stream_answer(
+                client=client,
+                model_name=OPENAI_MODEL,
+                messages=trimmed_message
+            )
+            openai_api_time = time.time() - openai_api_start_at
+        else:
+            assistant_text = ''
+            openai_api_time = None
 
         # append to evaluation result
         elapsed_time = time.time() - start_at
         evaluation_result['elapsed_time'].append(elapsed_time)
+        evaluation_result['retrieve_top_k_time'].append(retrieve_top_k_time)
+        evaluation_result['openai_api_time'].append(openai_api_time)
         evaluation_result['test_query'].append(test_query)
         evaluation_result['assistant_answer'].append(assistant_text)
 
