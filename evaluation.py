@@ -23,7 +23,8 @@ logging.getLogger("chromadb.telemetry").setLevel(logging.CRITICAL)
 FAQ_PKL_PATH = 'final_result.pkl'
 DISTANCE_THRESHOLD = 0.3
 OPENAI_MODEL = 'gpt-4o-mini'
-QUESTION_LIST_PATH = 'evaluation_question_list.txt'
+QUESTION_LIST_PATH_RELATED = 'evaluation_question_list.txt'
+QUESTION_LIST_PATH_NOT_RELATED = 'evaluation_question_list_not_related.txt'
 TOP_K = 2
 
 
@@ -98,7 +99,9 @@ def run_evaluation(question_list:List[str]):
 
 
 if __name__ == "__main__":
-    with open(QUESTION_LIST_PATH, 'r', encoding="utf-8") as f:
+    question_list_path = QUESTION_LIST_PATH_RELATED  # or QUESTION_LIST_PATH_NOT_RELATED
+
+    with open(question_list_path, 'r', encoding="utf-8") as f:
         question_list = f.readlines()
         question_list = [question.replace('\n', '') for question in question_list]
         question_list = list(filter(lambda x: len(x) >= 1, question_list))
