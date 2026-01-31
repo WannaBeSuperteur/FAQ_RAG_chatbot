@@ -62,13 +62,13 @@ std   : 12.966356507399645
 
 * 접근 방법 (= 구현) 요약
 
-| 구현 사항                          | 설명                                                                                      |
-|--------------------------------|-----------------------------------------------------------------------------------------|
-| Chunking 전략                    | Recursive (단, **대괄호 부분을 제외한 나머지 부분** 을 그대로 사용)                                          |
-| 임베딩 모델                         | **telepix/PIXIE-Rune-Preview**                                                          |
-| 검색 알고리즘                        | **Vector Search** (**코사인 유사도** 기반)<br>- top-k = **2**<br>- distance threshold = **0.3** |
-| Chroma vs. FAISS               | **Chroma DB**                                                                           |
-| RAG 으로 탐색할 문서 (질문 or 답변 or 복합) | **질문 Only**                                                                             |
+| 구현 사항                          | 설명                                                                                                         |
+|--------------------------------|------------------------------------------------------------------------------------------------------------|
+| Chunking 전략                    | Recursive (단, **대괄호 부분을 제외한 나머지 부분** 을 그대로 사용)                                                             |
+| 임베딩 모델                         | **telepix/PIXIE-Rune-Preview**                                                                             |
+| 검색 알고리즘                        | **Vector Search** (**코사인 유사도** 기반)<br>- top-k = **2**<br>- distance threshold (거리 상한선 = 유사도 하한선) = **0.3** |
+| Chroma vs. FAISS               | **Chroma DB**                                                                                              |
+| RAG 으로 탐색할 문서 (질문 or 답변 or 복합) | **질문 Only**                                                                                                |
 
 ### 3-1. Chunking 전략
 
@@ -127,7 +127,7 @@ std   : 12.966356507399645
 | Hybrid Search  | 위 2가지 방법의 **혼합 사용**                                 | - 장점: 특정 키워드에 집중하면서도 자연어 의미 고려 가능<br>- 단점: Keyword Search의 단점인 **어휘 사용에 따른 '의도에 맞는 문서를 못 찾는' 문제** 가 여전히 존재                                                                            |
 
 * 추가 사항
-  * Vector Search 결과 가장 distance 가 짧은 질문 **2개를 추출 (top-k = 2)**
+  * Vector Search 결과 가장 distance 가 짧은 (= 유사도가 가장 높은) 질문 **2개를 추출 (top-k = 2)**
   * 해당 2개의 질문에 대한 distance 가 모두 **0.3 이상** 이면, 스마트스토어 FAQ 범위를 벗어났다고 판단
 
 ### 3-4. Chroma vs. FAISS
@@ -224,7 +224,7 @@ std   : 12.966356507399645
 * 실행 과정 (PyCharm 또는 Windows Powershell)
 
 ```
-pip install -r requirements.py
+pip install -r requirements.txt
 python evaluation.py
 ```
 
@@ -306,7 +306,7 @@ python evaluation.py
   * 먼저 ```chatgpt_key.txt``` 파일을 **프로젝트 메인 디렉토리 (FAQ_RAG_chatbot) 에** 생성한 후, 해당 파일에 OpenAI API Key (```sk-proj-...```) 를 입력합니다. 
 
 ```
-pip install -r requirements.py
+pip install -r requirements.txt
 python main.py
 ```
 
